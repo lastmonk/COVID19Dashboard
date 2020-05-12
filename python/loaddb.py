@@ -11,6 +11,7 @@ import datetime
 import os
 from influxdb import InfluxDBClient
 
+f = open("output.txt", "a")
 print("------Running loaddb Python Script-------")
 
 #Initializing the variables
@@ -29,7 +30,7 @@ else:
     file_path = r"{0}\COVID-19\csse_covid_19_data\csse_covid_19_daily_reports\{1}.csv".format(Projectpath,formatted_date)
 
 #Printing the File Path
-print ("Processing File",file_path)
+print("Processing File", file_path, file=f)
 
 #Reading from CSV File
 csvReader = pd.read_csv(file_path)
@@ -40,15 +41,15 @@ client.create_database('COVID19Report')
 client.switch_database('COVID19Report')
 
 #For loop to Convert the Data read from CSV to JSON body.
-print("Creating data objects using csv data for the date {}..".format(formatted_date))
+print("Creating data objects using csv data for the date {}..".format(formatted_date), file=f)
 json_body = []
 for row_index, row in csvReader.iterrows() :
-    country=row[3]
+    country = row[3]
     confirmed = row[7]
     deaths = row[8]
-    recovered =row[9]
-    latitude =row[5]
-    longitude =row[6]
+    recovered = row[9]
+    latitude = row[5]
+    longitude = row[6]
     #Handling NaN
     if str(row[5]) == 'nan':
         latitude = 0.0
@@ -59,8 +60,8 @@ for row_index, row in csvReader.iterrows() :
             {
                 "measurement": "COVID19Report",
                 "tags": {
-                    "index":row_index,
-                    "country":country,
+                    "index": row_index,
+                    "country": country,
                     "confirmed": confirmed,
                     "deaths": deaths,
                     "recovered": recovered,
@@ -70,17 +71,19 @@ for row_index, row in csvReader.iterrows() :
                     "countryname": country,
                     "deaths": deaths,
                     "recovered": recovered,
-                    "latitude":latitude,
-                    "longitude":longitude
+                    "latitude": latitude,
+                    "longitude": longitude
                 }
             }
         ]
     except:
-        print("error:Error happened while creating the json Object - {}".format(row_index))
-print("Found {} data objects".format(row_index+1))
+        print("error:Error happened while creating the json Object - {}".format(row_index), file=f)
+print("Found {} data objects".format(row_index+1), file=f)
 
 #JSON will be written to the Database
-print("Updating {} records in database..".format(row_index+1))
+print("Updating {} records in database..".format(row_index+1), file=f)
 client.write_points(json_body)
 client.close()
-print("Updated {} records in the database".format(row_index+1))
+print("Updated {} records in the database".format(row_index+1), file=f)
+
+f.close()

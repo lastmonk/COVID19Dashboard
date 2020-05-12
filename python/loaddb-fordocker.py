@@ -9,7 +9,8 @@
 from influxdb import InfluxDBClient
 import time
 import helper
-print("------Running loaddb Python Script-------")
+f = open("output.txt", "a")
+print("------Running loaddb Python Script-------", file=f)
 
 while True:
     filename = helper.Download_latest_CSV()
@@ -18,7 +19,7 @@ while True:
     totalcount = len(json_body)
 
     # JSON will be written to the Database
-    print("Updating {} records in database..".format(totalcount))
+    print("Updating {} records in database..".format(totalcount), file=f)
 
     # Client Object Created to connect the InfluxDB
     client = InfluxDBClient(host='influxdb', port=8086)
@@ -26,8 +27,8 @@ while True:
     client.switch_database('COVID19Report')
     client.write_points(json_body)
     client.close()
-    print("Updated {} records in the database".format(totalcount))
-    print("Script will run tommorrow..")
+    print("Updated {} records in the database".format(totalcount), file=f)
+    print("Script will run tommorrow..", file=f)
     time.sleep(24.0 * 60.0 * 60.0)
 
-
+f.close()
