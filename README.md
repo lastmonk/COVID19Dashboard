@@ -24,7 +24,7 @@ This documentation willl help user to Install the application in user windows ma
 ## Get started with the COVID19Dashboard Project
    
   ## Step 1
-   - Open PowerShell in the windows machine run Docker command
+   - Open PowerShell in the windows machine, run Docker command
    - Create a Private network for Docker with name COVID19DashboardbNetwork
         - docker network create COVID19DashboardbNetwork
    
@@ -34,13 +34,15 @@ This documentation willl help user to Install the application in user windows ma
 
   ## Step 3
 
-  - Run below commnd to download the Python Script image from DockerHub and run as a container
+  - Run below command to download the Python Script image from DockerHub and run as a container
     - docker run -d -p 3000:3000 --network COVID19DashboardbNetwork --name=pythonimage sunishsurendrank/pythonimage:v1
 
   ## Step 4
-  - Run below commnd to download the Grafana Docker Image from DockerHub and run as a container
+  - Run below command to download the Grafana Docker Image from DockerHub and run as a container
     - docker run -d -p 3000:3000 --network COVID19DashboardbNetwork --name=grafana sunishsurendrank/grafanaimage:v1
 
+Note: If you get an error regarding the port (The above port is already used by other process), change the port and the 
+name field and run the command again. 
   ## Step 5
 
   - Open Chrome and access http://localhost:3000
